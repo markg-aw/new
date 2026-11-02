@@ -18,7 +18,7 @@
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
       <h2>Menu</h2>
-      <button class="icon-btn" onclick="toggleSidebar()">✕</button>
+      <button class="icon-btn" aria-label="Close menu" onclick="toggleSidebar()">✕</button>
     </div>
     <nav class="sidebar-links">
       <a href="#" onclick="toggleSidebar(); openModal('loginModal')">
@@ -26,6 +26,16 @@
       </a>
       <a href="#" onclick="toggleSidebar(); openModal('wishlistModal')">
         <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> Wishlist
+      </a>
+      <a href="#" onclick="toggleSidebar(); openOrdersModal()">
+        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none">
+          <path d="M16.5 9.4l-9-5.19M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+          <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+          <line x1="12" y1="22.08" x2="12" y2="12"/>
+        </svg> My Orders
+      </a>
+      <a href="#" onclick="toggleSidebar(); openModal('shopModal')">
+        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg> Shop All
       </a>
       <a href="#" onclick="toggleSidebar(); openModal('aboutModal')">
         <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg> About Us
@@ -39,7 +49,7 @@
   <!-- HEADER -->
   <header>
     <div class="header-left">
-      <button class="icon-btn glass" onclick="toggleSidebar()">
+      <button class="icon-btn glass" aria-label="Open menu" onclick="toggleSidebar()">
         <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
       </button>
       <div class="logo">
@@ -50,18 +60,18 @@
 
     <div class="search-container glass">
       <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" class="search-icon"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-      <input type="text" id="searchInput" placeholder="Search tech..." onkeyup="searchProducts()">
+      <input type="text" id="searchInput" placeholder="Search tech..." aria-label="Search products" oninput="searchProducts()">
     </div>
 
     <div class="header-right">
       <button class="btn-ghost" style="margin-right: 0.5rem; display: none;" id="desktopShopBtn" onclick="openModal('shopModal')">Shop All</button>
 
-      <button class="icon-btn glass" onclick="toggleTheme()" id="themeToggle">
+      <button class="icon-btn glass" id="themeToggle" aria-label="Toggle theme">
         <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" id="themeIcon"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
       </button>
 
       <div class="cart-wrapper">
-        <button class="icon-btn glass" onclick="openModal('cartModal')">
+        <button class="icon-btn glass" aria-label="Open cart" onclick="openModal('cartModal')">
           <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
           <span class="cart-badge" id="cartCount">0</span>
         </button>
@@ -75,54 +85,40 @@
     <button class="tag glass" onclick="filterTag('mobile', this)">Mobile</button>
     <button class="tag glass" onclick="filterTag('audio', this)">Audio</button>
     <button class="tag glass" onclick="filterTag('wearable', this)">Wearables</button>
+    <button class="tag glass" onclick="filterTag('tv', this)">TVs</button>
     <button class="tag glass" onclick="filterTag('computing', this)">Computing</button>
   </div>
 
   <!-- BENTO GRID -->
-  <main class="bento-container" id="productGrid">
-    <!-- Products will be injected here via JS -->
-  </main>
+  <main class="bento-container" id="productGrid"></main>
+  <p id="noResults" class="empty-msg" hidden>No products found.</p>
 
   <!-- ================= MODALS ================= -->
 
   <!-- PRODUCT DETAIL MODAL -->
   <div class="modal glass" id="productDetailModal" style="max-width: 480px; padding: 0; overflow: hidden; display: flex; flex-direction: column;">
-    <button class="icon-btn" onclick="closeAllModals()" style="position: absolute; top: 1rem; right: 1rem; z-index: 10; background: var(--bg-base);">✕</button>
-
+    <button class="icon-btn" aria-label="Close" onclick="closeAllModals()" style="position: absolute; top: 1rem; right: 1rem; z-index: 10; background: var(--bg-base);">✕</button>
     <div style="width: 100%; height: 220px; background: var(--glass-border); position: relative;">
       <img id="pd-img" src="" alt="Product" style="width: 100%; height: 100%; object-fit: cover;">
     </div>
-
     <div style="padding: 1.2rem; overflow-y: auto; max-height: calc(85vh - 220px);">
       <span id="pd-category" style="font-size: 0.75rem; font-weight: 800; color: var(--accent); text-transform: uppercase; letter-spacing: 1px;">Category</span>
       <h2 id="pd-name" style="font-size: 1.5rem; font-weight: 800; margin: 0.2rem 0 0.5rem 0; line-height: 1.2;">Product Name</h2>
-      
-      <!-- Display Rating -->
       <div class="rating-container" style="margin-bottom: 0.8rem; justify-content: flex-start;">
         <span class="stars" id="pd-stars">★★★★★</span>
         <span class="rating-count" id="pd-rating-count" style="text-decoration: underline; cursor: pointer;">(0 Reviews)</span>
       </div>
-
       <h3 id="pd-price" style="font-size: 1.6rem; font-weight: 800; color: var(--text-main); margin-bottom: 1rem;">₱0</h3>
-
-      <p id="pd-desc" style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 1.5rem; border-left: 3px solid var(--accent); padding-left: 0.8rem;">
-        Description goes here.
-      </p>
-      
+      <p id="pd-desc" style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 1.5rem; border-left: 3px solid var(--accent); padding-left: 0.8rem;">Description goes here.</p>
       <div style="display: flex; gap: 0.8rem; margin-bottom: 1.5rem;">
-        <button class="btn-solid" style="flex: 1; padding: 0.9rem;" onclick="addFromDetail()">Add to Cart</button>
-        <button class="btn-ghost" id="pd-wishlist-btn" onclick="toggleWishlistDetail()" style="padding: 0 1rem; font-size: 1.2rem;">🤍</button>
+        <button class="btn-solid" style="flex: 1; padding: 0.9rem;" onclick="addFromDetail()"><svg class="ico" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>Add to Cart</button>
+        <button class="btn-ghost" id="pd-wishlist-btn" onclick="toggleWishlistDetail()" style="padding: 0.6rem 1rem; display: flex; align-items: center;">
+          <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </button>
       </div>
-
-      <!-- USER REVIEWS SECTION -->
       <div style="border-top: 1px solid var(--glass-border); padding-top: 1rem;">
         <h3 style="font-size: 1rem; margin-bottom: 0.8rem;">User Reviews</h3>
-        
-        <div id="pd-reviews-list" style="max-height: 150px; overflow-y: auto; display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 1rem;">
-          <!-- Injected via JS -->
-        </div>
-
-        <!-- WRITE A REVIEW / RATING INPUT -->
+        <div id="pd-reviews-list" style="max-height: 150px; overflow-y: auto; display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 1rem;"></div>
         <div class="review-form">
           <p style="font-size: 0.85rem; font-weight: 700; margin-bottom: 0.2rem;">Rate this product:</p>
           <div class="rating-input" id="ratingInput">
@@ -132,9 +128,9 @@
             <span onclick="setRating(4)">★</span>
             <span onclick="setRating(5)">★</span>
           </div>
-          <input type="text" id="reviewName" placeholder="Your Name" required maxlength="30">
-          <textarea id="reviewText" placeholder="Write your feedback..." rows="2" required maxlength="150"></textarea>
-          <button class="btn-solid" style="padding: 0.6rem; font-size: 0.85rem;" onclick="submitReview()">Submit Feedback</button>
+          <div class="field"><svg class="ico" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><input class="has-icon" type="text" id="reviewName" placeholder="Your Name" required maxlength="30"></div>
+          <div class="field area"><svg class="ico" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><textarea class="has-icon" id="reviewText" placeholder="Write your feedback..." rows="2" required maxlength="150"></textarea></div>
+          <button class="btn-solid" style="padding: 0.6rem; font-size: 0.85rem;" onclick="submitReview()"><svg class="ico" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Submit Feedback</button>
         </div>
       </div>
     </div>
@@ -143,22 +139,19 @@
   <!-- CART MODAL -->
   <div class="modal glass" id="cartModal">
     <div class="modal-header">
-      <h2>Your Cart</h2>
-      <button class="icon-btn" onclick="closeAllModals()">✕</button>
+      <h2><svg class="ico" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>Your Cart</h2>
+      <button class="icon-btn" aria-label="Close" onclick="closeAllModals()">✕</button>
     </div>
-    
     <div id="cartModalItems" style="max-height: 180px; overflow-y: auto; margin-bottom: 1rem;">
       <p id="cartEmptyMsg" style="text-align: center; color: var(--text-muted); padding: 2rem 0;">Your cart is currently empty.</p>
     </div>
-
     <div id="couponSection" style="display: none; margin-bottom: 1rem;">
       <div style="display: flex; gap: 0.5rem;">
-        <input type="text" id="couponInput" placeholder="Coupon Code (e.g. VAULT10)" style="flex: 1; padding: 0.6rem; border-radius: 8px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.5); outline: none; font-size: 0.85rem;">
-        <button class="btn-ghost" onclick="applyCoupon()" style="padding: 0 1rem; font-size: 0.8rem;">Apply</button>
+        <div class="field"><svg class="ico" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg><input class="has-icon" type="text" id="couponInput" placeholder="Coupon Code (e.g. VAULT10)" style="flex: 1; padding: 0.6rem; border-radius: 8px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.5); outline: none; font-size: 0.85rem;"></div>
+        <button class="btn-ghost" onclick="applyCoupon()" style="padding: 0 1rem; font-size: 0.8rem;"><svg class="ico" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="8 12 11 15 16 9"/></svg>Apply</button>
       </div>
       <p id="couponMsg" style="font-size: 0.75rem; margin-top: 0.3rem; color: var(--accent); display: none;">Coupon Applied: 10% Off!</p>
     </div>
-
     <div id="cartTotalContainer" style="display: none; flex-direction: column; gap: 0.4rem; margin-bottom: 1rem; border-top: 1px solid var(--glass-border); padding-top: 1rem;">
       <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-muted);">
         <span>Subtotal:</span><span id="cartSubtotal">₱0</span>
@@ -170,47 +163,84 @@
         <span>Total:</span><span id="cartTotalPrice">₱0</span>
       </div>
     </div>
-    
-    <button class="btn-solid" style="width: 100%;" onclick="openCheckout()">Proceed to Checkout</button>
+    <button class="btn-solid" style="width: 100%;" onclick="openCheckout()"><svg class="ico" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>Proceed to Checkout</button>
   </div>
-
-  <!-- CHECKOUT MODAL -->
   <div class="modal glass" id="checkoutModal">
-    <div class="modal-header"><h2>Checkout Details</h2><button class="icon-btn" onclick="closeAllModals()">✕</button></div>
+    <div class="modal-header"><h2><svg class="ico" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>Checkout Details</h2><button class="icon-btn" aria-label="Close" onclick="closeAllModals()">✕</button></div>
     <form id="checkoutForm" onsubmit="processOrder(event)">
-      <input type="text" placeholder="Full Name" required class="modal-input">
-      <input type="email" placeholder="Gmail / Email Address" required class="modal-input">
-      <input type="tel" placeholder="Phone Number" required class="modal-input">
-      <textarea placeholder="Complete Delivery Address" rows="2" required class="modal-input" style="resize:none;"></textarea>
-      
+      <div class="field"><svg class="ico" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><input type="text" placeholder="Full Name" required maxlength="60" class="has-icon modal-input"></div>
+      <div class="field"><svg class="ico" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg><input type="email" placeholder="Gmail / Email Address" required maxlength="100" class="has-icon modal-input"></div>
+      <div class="field"><svg class="ico" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg><input type="tel" placeholder="Phone Number" required maxlength="15" pattern="[0-9+\s\-()]{7,15}" class="has-icon modal-input"></div>
+      <div class="field area"><svg class="ico" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><textarea placeholder="Complete Delivery Address" rows="2" required maxlength="200" class="has-icon modal-input" style="resize:none;"></textarea></div>
       <p style="font-weight: 700; font-size: 0.85rem; margin-bottom: 0.5rem;">Payment Method</p>
       <div class="payment-grid">
         <label class="payment-card"><input type="radio" name="payment" value="gcash" required><div class="pay-box"><svg viewBox="0 0 100 100" width="24" height="24"><circle cx="50" cy="50" r="50" fill="#007DFE"/><path d="M50 22C34.5 22 22 34.5 22 50s12.5 28 28 28 28-12.5 28-28S65.5 22 50 22zm3 43c-8.3 0-15-6.7-15-15s6.7-15 15-15 15 6.7 15 15-6.7 15-15 15z" fill="#fff"/><circle cx="53" cy="50" r="7" fill="#007DFE"/></svg><span>GCash</span></div></label>
         <label class="payment-card"><input type="radio" name="payment" value="maya" required><div class="pay-box"><svg viewBox="0 0 100 100" width="24" height="24"><circle cx="50" cy="50" r="50" fill="#00D26A"/><path d="M35 65V40l10 10 10-10v25h10V35H55L45 45 35 35H25v30h10z" fill="#fff"/></svg><span>Maya</span></div></label>
         <label class="payment-card"><input type="radio" name="payment" value="cod" required><div class="pay-box"><svg viewBox="0 0 100 100" width="24" height="24"><rect x="15" y="30" width="70" height="40" rx="5" fill="#10b981" stroke="#047857" stroke-width="3"/><circle cx="50" cy="50" r="12" fill="#fff"/><path d="M50 45v10M45 50h10" stroke="#10b981" stroke-width="3"/></svg><span>COD</span></div></label>
       </div>
-      <button type="submit" class="btn-solid" id="confirmOrderBtn" style="width: 100%; margin-top: 1rem;">Confirm Order</button>
+      <button type="submit" class="btn-solid" id="confirmOrderBtn" style="width: 100%; margin-top: 1rem;"><svg class="ico" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><span id="confirmText">Confirm Order</span></button>
     </form>
+  </div>
+  <div class="modal glass" id="orderSuccessModal">
+    <div class="modal-header">
+      <h2><svg class="ico" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="8 12 11 15 16 9"/></svg>Order Confirmed</h2>
+      <button class="icon-btn" aria-label="Close" onclick="closeAllModals()">✕</button>
+    </div>
+
+    <div class="order-success-icon">
+      <svg viewBox="0 0 24 24" width="64" height="64" stroke="#10b981" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/>
+        <polyline points="8 12 11 15 16 9"/>
+      </svg>
+    </div>
+
+    <p style="text-align: center; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem;">
+      Salamat sa pagbili! Your order has been placed successfully.
+    </p>
+    <p id="orderSuccessId" style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem; text-align: center;"></p>
+    <div id="orderSummaryItems" style="max-height: 160px; overflow-y: auto; margin-bottom: 1rem;"></div>
+    <div style="display: flex; justify-content: space-between; font-weight: 800; font-size: 1.1rem; border-top: 1px dashed var(--glass-border); padding-top: 0.6rem; margin-bottom: 1rem;">
+      <span>Total Paid:</span><span id="orderSummaryTotal">₱0</span>
+    </div>
+    <div style="display: flex; gap: 0.6rem;">
+      <button class="btn-ghost" style="flex: 1; padding: 0.8rem;" onclick="closeAllModals()">Close</button>
+      <button class="btn-solid" style="flex: 1; padding: 0.8rem; display: flex; align-items: center; justify-content: center; gap: 0.4rem;" onclick="buyAgain()">
+        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="1 4 1 10 7 10"/>
+          <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+        </svg>
+        Buy Again
+      </button>
+    </div>
+  </div>
+
+  <!-- MY ORDERS MODAL -->
+  <div class="modal glass" id="ordersModal">
+    <div class="modal-header">
+      <h2><svg class="ico" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>My Orders</h2>
+      <button class="icon-btn" aria-label="Close" onclick="closeAllModals()">✕</button>
+    </div>
+    <div id="ordersList" style="max-height: 60vh; overflow-y: auto;"></div>
   </div>
 
   <!-- LOG IN MODAL -->
   <div class="modal glass" id="loginModal">
-    <div class="modal-header"><h2>Log In</h2><button class="icon-btn" onclick="closeAllModals()">✕</button></div>
+    <div class="modal-header"><h2><svg class="ico" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>Log In</h2><button class="icon-btn" aria-label="Close" onclick="closeAllModals()">✕</button></div>
     <form onsubmit="event.preventDefault(); closeAllModals(); showSnackbar('Logged in successfully!');">
-      <input type="text" placeholder="Username" required class="modal-input">
-      <input type="email" placeholder="Email Address" required class="modal-input">
-      <input type="password" placeholder="Password" required class="modal-input">
-      <button type="submit" class="btn-solid" style="width: 100%;">Sign In</button>
+      <div class="field"><svg class="ico" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><input type="text" placeholder="Username" required maxlength="30" class="has-icon modal-input"></div>
+      <div class="field"><svg class="ico" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg><input type="email" placeholder="Email Address" required maxlength="100" class="has-icon modal-input"></div>
+      <div class="field"><svg class="ico" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><input type="password" placeholder="Password" required maxlength="64" class="has-icon modal-input"></div>
+      <button type="submit" class="btn-solid" style="width: 100%;"><svg class="ico" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>Sign In</button>
     </form>
   </div>
 
   <!-- CONTACT MODAL -->
   <div class="modal glass" id="contactModal">
-    <div class="modal-header"><h2>Contact Us</h2><button class="icon-btn" onclick="closeAllModals()">✕</button></div>
+    <div class="modal-header"><h2><svg class="ico" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Contact Us</h2><button class="icon-btn" aria-label="Close" onclick="closeAllModals()">✕</button></div>
     <form onsubmit="event.preventDefault(); closeAllModals(); showSnackbar('Message sent! We will reply soon.');">
-      <input type="text" placeholder="Your Name" required class="modal-input">
-      <textarea placeholder="Your Message" rows="3" required class="modal-input" style="resize:none;"></textarea>
-      <button type="submit" class="btn-solid" style="width: 100%;">Send Message</button>
+      <div class="field"><svg class="ico" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><input type="text" placeholder="Your Name" required maxlength="60" class="has-icon modal-input"></div>
+      <div class="field area"><svg class="ico" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><textarea placeholder="Your Message" rows="3" required maxlength="500" class="has-icon modal-input" style="resize:none;"></textarea></div>
+      <button type="submit" class="btn-solid" style="width: 100%;"><svg class="ico" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Send Message</button>
     </form>
     <div style="text-align: center; margin-top: 1.5rem;">
       <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem;">Or reach us on social media</p>
@@ -224,49 +254,65 @@
 
   <!-- ABOUT, WISHLIST, SHOP MODALS -->
   <div class="modal glass" id="aboutModal">
-    <div class="modal-header"><h2>About Vault</h2><button class="icon-btn" onclick="closeAllModals()">✕</button></div>
+    <div class="modal-header"><h2><svg class="ico" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>About Vault</h2><button class="icon-btn" aria-label="Close" onclick="closeAllModals()">✕</button></div>
     <p style="font-size: 0.9rem; line-height: 1.6;">Vault is your premier destination for curated, high-end technology. We bring you the latest gadgets with a seamless shopping experience.</p>
   </div>
   
   <div class="modal glass" id="wishlistModal">
-    <div class="modal-header"><h2>Your Wishlist</h2><button class="icon-btn" onclick="closeAllModals()">✕</button></div>
+    <div class="modal-header"><h2><svg class="ico" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>Your Wishlist</h2><button class="icon-btn" aria-label="Close" onclick="closeAllModals()">✕</button></div>
     <div id="wishlistItemsList">
       <p style="color: var(--text-muted); text-align: center; padding: 2rem 0;">Your wishlist is empty.</p>
     </div>
   </div>
   
   <div class="modal glass" id="shopModal">
-    <div class="modal-header"><h2>Shop All Products</h2><button class="icon-btn" onclick="closeAllModals()">✕</button></div>
+    <div class="modal-header"><h2><svg class="ico" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Shop All Products</h2><button class="icon-btn" aria-label="Close" onclick="closeAllModals()">✕</button></div>
     <div class="shop-list" id="shopList"></div>
   </div>
 
   <!-- FAB & FEEDBACK -->
-  <button class="fab" onclick="openModal('feedbackModal')">
+  <button class="fab" aria-label="Send feedback" onclick="openModal('feedbackModal')">
     <svg viewBox="0 0 24 24" width="22" height="22" stroke="#fff" stroke-width="2" fill="none"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
   </button>
   <div class="modal glass" id="feedbackModal">
-    <div class="modal-header"><h2>User Feedback</h2><button class="icon-btn" onclick="closeAllModals()">✕</button></div>
+    <div class="modal-header"><h2><svg class="ico" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>User Feedback</h2><button class="icon-btn" aria-label="Close" onclick="closeAllModals()">✕</button></div>
     <form onsubmit="event.preventDefault(); closeAllModals(); showSnackbar('Salamat! Natanggap na namin ang feedback mo.');">
-      <input type="text" placeholder="Your Name" required class="modal-input">
-      <textarea placeholder="Tell us what you love or how we can improve..." rows="3" required class="modal-input"></textarea>
-      <button type="submit" class="btn-solid" style="width: 100%;">Submit Feedback</button>
+      <div class="field"><svg class="ico" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><input type="text" placeholder="Your Name" required maxlength="60" class="has-icon modal-input"></div>
+      <div class="field area"><svg class="ico" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><textarea placeholder="Tell us what you love or how we can improve..." rows="3" required maxlength="500" class="has-icon modal-input"></textarea></div>
+      <button type="submit" class="btn-solid" style="width: 100%;"><svg class="ico" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Submit Feedback</button>
     </form>
   </div>
 
   <!-- CHATBOT -->
-  <button class="chat-fab" onclick="toggleChat()">
+  <button class="chat-fab" aria-label="Open chat" onclick="toggleChat()">
     <svg viewBox="0 0 24 24" width="22" height="22" stroke="#fff" stroke-width="2" fill="none"><path d="M12 2a10 10 0 0 1 10 10c0 5.523-4.477 10-10 10a9.96 9.96 0 0 1-4.587-1.11L2 22l1.11-5.413A9.96 9.96 0 0 1 2 12c0-5.523 4.477-10 10-10z"/><path d="M8 12h.01M12 12h.01M16 12h.01"/></svg>
   </button>
   
   <div class="chat-window glass" id="chatWindow">
     <div class="chat-header">
-      <div class="chat-header-info"><div class="chat-avatar">🤖</div><div><h4>Vault Assistant</h4><p>Online</p></div></div>
-      <button class="icon-btn" onclick="toggleChat()">✕</button>
+      <div class="chat-header-info">
+        <div class="chat-avatar">
+          <svg viewBox="0 0 24 24" width="18" height="18" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="10" rx="2"/>
+            <circle cx="12" cy="5" r="2"/>
+            <path d="M12 7v4"/>
+            <line x1="8" y1="16" x2="8.01" y2="16"/>
+            <line x1="16" y1="16" x2="16.01" y2="16"/>
+          </svg>
+        </div>
+        <div><h4>Vault Assistant</h4><p>Online</p></div>
+      </div>
+      <button class="icon-btn" aria-label="Close chat" onclick="toggleChat()">✕</button>
     </div>
     <div class="chat-body" id="chatBody"><div class="chat-msg bot">Hello! How can I help you today?</div></div>
     <div class="chat-footer">
-      <input type="text" id="chatInput" placeholder="Type..." onkeypress="handleChatEnter(event)">
-      <button class="btn-solid" onclick="sendChatMessage()" style="width: auto; padding: 0 0.8rem; font-size: 0.9rem;">➤</button>
+      <input type="text" id="chatInput" placeholder="Type..." maxlength="200" onkeydown="handleChatEnter(event)">
+      <button class="btn-solid" onclick="sendChatMessage()" style="width: auto; padding: 0.5rem 0.9rem; display: flex; align-items: center; justify-content: center;">
+        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="22" y1="2" x2="11" y2="13"/>
+          <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+        </svg>
+      </button>
     </div>
   </div>
 
