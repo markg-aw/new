@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vault — Premium Tech</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- LOADING SCREEN -->
+  <div id="loader"><div class="spinner"></div></div>
+
+  <!-- GLOBAL OVERLAY -->
+  <div class="overlay" id="globalOverlay" onclick="closeAllModals()"></div>
+
+  <!-- SIDEBAR MENU -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <h2>Menu</h2>
+      <button class="icon-btn" onclick="toggleSidebar()">✕</button>
+    </div>
+    <nav class="sidebar-links">
+      <a href="#" onclick="toggleSidebar(); openModal('loginModal')">
+        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Log In
+      </a>
+      <a href="#" onclick="toggleSidebar(); openModal('wishlistModal')">
+        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> Wishlist
+      </a>
+      <a href="#" onclick="toggleSidebar(); openModal('aboutModal')">
+        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg> About Us
+      </a>
+      <a href="#" onclick="toggleSidebar(); openModal('contactModal')">
+        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg> Contact Us
+      </a>
+    </nav>
+  </aside>
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-left">
+      <button class="icon-btn glass" onclick="toggleSidebar()">
+        <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+      </button>
+      <div class="logo">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="logo-svg"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Vault<span>.</span>
+      </div>
+    </div>
+
+    <div class="search-container glass">
+      <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" class="search-icon"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input type="text" id="searchInput" placeholder="Search tech..." onkeyup="searchProducts()">
+    </div>
+
+    <div class="header-right">
+      <button class="btn-ghost" style="margin-right: 0.5rem; display: none;" id="desktopShopBtn" onclick="openModal('shopModal')">Shop All</button>
+
+      <button class="icon-btn glass" onclick="toggleTheme()" id="themeToggle">
+        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" id="themeIcon"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+      </button>
+
+      <div class="cart-wrapper">
+        <button class="icon-btn glass" onclick="openModal('cartModal')">
+          <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          <span class="cart-badge" id="cartCount">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- CATEGORY TAGS -->
+  <div class="tags-container">
+    <button class="tag glass active" onclick="filterTag('all', this)">All Tech</button>
+    <button class="tag glass" onclick="filterTag('mobile', this)">Mobile</button>
+    <button class="tag glass" onclick="filterTag('audio', this)">Audio</button>
+    <button class="tag glass" onclick="filterTag('wearable', this)">Wearables</button>
+    <button class="tag glass" onclick="filterTag('computing', this)">Computing</button>
+  </div>
+
+  <!-- BENTO GRID -->
+  <main class="bento-container" id="productGrid">
+    <!-- Products will be injected here via JS -->
+  </main>
+
+  <!-- ================= MODALS ================= -->
+
+  <!-- PRODUCT DETAIL MODAL -->
+  <div class="modal glass" id="productDetailModal" style="max-width: 480px; padding: 0; overflow: hidden; display: flex; flex-direction: column;">
+    <button class="icon-btn" onclick="closeAllModals()" style="position: absolute; top: 1rem; right: 1rem; z-index: 10; background: var(--bg-base);">✕</button>
+
+    <div style="width: 100%; height: 220px; background: var(--glass-border); position: relative;">
+      <img id="pd-img" src="" alt="Product" style="width: 100%; height: 100%; object-fit: cover;">
+    </div>
+
+    <div style="padding: 1.2rem; overflow-y: auto; max-height: calc(85vh - 220px);">
+      <span id="pd-category" style="font-size: 0.75rem; font-weight: 800; color: var(--accent); text-transform: uppercase; letter-spacing: 1px;">Category</span>
+      <h2 id="pd-name" style="font-size: 1.5rem; font-weight: 800; margin: 0.2rem 0 0.5rem 0; line-height: 1.2;">Product Name</h2>
+      
+      <!-- Display Rating -->
+      <div class="rating-container" style="margin-bottom: 0.8rem; justify-content: flex-start;">
+        <span class="stars" id="pd-stars">★★★★★</span>
+        <span class="rating-count" id="pd-rating-count" style="text-decoration: underline; cursor: pointer;">(0 Reviews)</span>
+      </div>
+
+      <h3 id="pd-price" style="font-size: 1.6rem; font-weight: 800; color: var(--text-main); margin-bottom: 1rem;">₱0</h3>
+
+      <p id="pd-desc" style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 1.5rem; border-left: 3px solid var(--accent); padding-left: 0.8rem;">
+        Description goes here.
+      </p>
+      
+      <div style="display: flex; gap: 0.8rem; margin-bottom: 1.5rem;">
+        <button class="btn-solid" style="flex: 1; padding: 0.9rem;" onclick="addFromDetail()">Add to Cart</button>
+        <button class="btn-ghost" id="pd-wishlist-btn" onclick="toggleWishlistDetail()" style="padding: 0 1rem; font-size: 1.2rem;">🤍</button>
+      </div>
+
+      <!-- USER REVIEWS SECTION -->
+      <div style="border-top: 1px solid var(--glass-border); padding-top: 1rem;">
+        <h3 style="font-size: 1rem; margin-bottom: 0.8rem;">User Reviews</h3>
+        
+        <div id="pd-reviews-list" style="max-height: 150px; overflow-y: auto; display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 1rem;">
+          <!-- Injected via JS -->
+        </div>
+
+        <!-- WRITE A REVIEW / RATING INPUT -->
+        <div class="review-form">
+          <p style="font-size: 0.85rem; font-weight: 700; margin-bottom: 0.2rem;">Rate this product:</p>
+          <div class="rating-input" id="ratingInput">
+            <span onclick="setRating(1)">★</span>
+            <span onclick="setRating(2)">★</span>
+            <span onclick="setRating(3)">★</span>
+            <span onclick="setRating(4)">★</span>
+            <span onclick="setRating(5)">★</span>
+          </div>
+          <input type="text" id="reviewName" placeholder="Your Name" required maxlength="30">
+          <textarea id="reviewText" placeholder="Write your feedback..." rows="2" required maxlength="150"></textarea>
+          <button class="btn-solid" style="padding: 0.6rem; font-size: 0.85rem;" onclick="submitReview()">Submit Feedback</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CART MODAL -->
+  <div class="modal glass" id="cartModal">
+    <div class="modal-header">
+      <h2>Your Cart</h2>
+      <button class="icon-btn" onclick="closeAllModals()">✕</button>
+    </div>
+    
+    <div id="cartModalItems" style="max-height: 180px; overflow-y: auto; margin-bottom: 1rem;">
+      <p id="cartEmptyMsg" style="text-align: center; color: var(--text-muted); padding: 2rem 0;">Your cart is currently empty.</p>
+    </div>
+
+    <div id="couponSection" style="display: none; margin-bottom: 1rem;">
+      <div style="display: flex; gap: 0.5rem;">
+        <input type="text" id="couponInput" placeholder="Coupon Code (e.g. VAULT10)" style="flex: 1; padding: 0.6rem; border-radius: 8px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.5); outline: none; font-size: 0.85rem;">
+        <button class="btn-ghost" onclick="applyCoupon()" style="padding: 0 1rem; font-size: 0.8rem;">Apply</button>
+      </div>
+      <p id="couponMsg" style="font-size: 0.75rem; margin-top: 0.3rem; color: var(--accent); display: none;">Coupon Applied: 10% Off!</p>
+    </div>
+
+    <div id="cartTotalContainer" style="display: none; flex-direction: column; gap: 0.4rem; margin-bottom: 1rem; border-top: 1px solid var(--glass-border); padding-top: 1rem;">
+      <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-muted);">
+        <span>Subtotal:</span><span id="cartSubtotal">₱0</span>
+      </div>
+      <div id="discountRow" style="display: none; justify-content: space-between; font-size: 0.85rem; color: #ef4444;">
+        <span>Discount:</span><span id="cartDiscount">-₱0</span>
+      </div>
+      <div style="display: flex; justify-content: space-between; font-weight: 800; font-size: 1.1rem; border-top: 1px dashed var(--glass-border); padding-top: 0.5rem; margin-top: 0.3rem;">
+        <span>Total:</span><span id="cartTotalPrice">₱0</span>
+      </div>
+    </div>
+    
+    <button class="btn-solid" style="width: 100%;" onclick="openCheckout()">Proceed to Checkout</button>
+  </div>
+
+  <!-- CHECKOUT MODAL -->
+  <div class="modal glass" id="checkoutModal">
+    <div class="modal-header"><h2>Checkout Details</h2><button class="icon-btn" onclick="closeAllModals()">✕</button></div>
+    <form id="checkoutForm" onsubmit="processOrder(event)">
+      <input type="text" placeholder="Full Name" required class="modal-input">
+      <input type="email" placeholder="Gmail / Email Address" required class="modal-input">
+      <input type="tel" placeholder="Phone Number" required class="modal-input">
+      <textarea placeholder="Complete Delivery Address" rows="2" required class="modal-input" style="resize:none;"></textarea>
+      
+      <p style="font-weight: 700; font-size: 0.85rem; margin-bottom: 0.5rem;">Payment Method</p>
+      <div class="payment-grid">
+        <label class="payment-card"><input type="radio" name="payment" value="gcash" required><div class="pay-box"><svg viewBox="0 0 100 100" width="24" height="24"><circle cx="50" cy="50" r="50" fill="#007DFE"/><path d="M50 22C34.5 22 22 34.5 22 50s12.5 28 28 28 28-12.5 28-28S65.5 22 50 22zm3 43c-8.3 0-15-6.7-15-15s6.7-15 15-15 15 6.7 15 15-6.7 15-15 15z" fill="#fff"/><circle cx="53" cy="50" r="7" fill="#007DFE"/></svg><span>GCash</span></div></label>
+        <label class="payment-card"><input type="radio" name="payment" value="maya" required><div class="pay-box"><svg viewBox="0 0 100 100" width="24" height="24"><circle cx="50" cy="50" r="50" fill="#00D26A"/><path d="M35 65V40l10 10 10-10v25h10V35H55L45 45 35 35H25v30h10z" fill="#fff"/></svg><span>Maya</span></div></label>
+        <label class="payment-card"><input type="radio" name="payment" value="cod" required><div class="pay-box"><svg viewBox="0 0 100 100" width="24" height="24"><rect x="15" y="30" width="70" height="40" rx="5" fill="#10b981" stroke="#047857" stroke-width="3"/><circle cx="50" cy="50" r="12" fill="#fff"/><path d="M50 45v10M45 50h10" stroke="#10b981" stroke-width="3"/></svg><span>COD</span></div></label>
+      </div>
+      <button type="submit" class="btn-solid" id="confirmOrderBtn" style="width: 100%; margin-top: 1rem;">Confirm Order</button>
+    </form>
+  </div>
+
+  <!-- LOG IN MODAL -->
+  <div class="modal glass" id="loginModal">
+    <div class="modal-header"><h2>Log In</h2><button class="icon-btn" onclick="closeAllModals()">✕</button></div>
+    <form onsubmit="event.preventDefault(); closeAllModals(); showSnackbar('Logged in successfully!');">
+      <input type="text" placeholder="Username" required class="modal-input">
+      <input type="email" placeholder="Email Address" required class="modal-input">
+      <input type="password" placeholder="Password" required class="modal-input">
+      <button type="submit" class="btn-solid" style="width: 100%;">Sign In</button>
+    </form>
+  </div>
+
+  <!-- CONTACT MODAL -->
+  <div class="modal glass" id="contactModal">
+    <div class="modal-header"><h2>Contact Us</h2><button class="icon-btn" onclick="closeAllModals()">✕</button></div>
+    <form onsubmit="event.preventDefault(); closeAllModals(); showSnackbar('Message sent! We will reply soon.');">
+      <input type="text" placeholder="Your Name" required class="modal-input">
+      <textarea placeholder="Your Message" rows="3" required class="modal-input" style="resize:none;"></textarea>
+      <button type="submit" class="btn-solid" style="width: 100%;">Send Message</button>
+    </form>
+    <div style="text-align: center; margin-top: 1.5rem;">
+      <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem;">Or reach us on social media</p>
+      <div style="display: flex; justify-content: center; gap: 1rem;">
+        <a href="#" class="social-icon"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+        <a href="#" class="social-icon"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+        <a href="#" class="social-icon"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg></a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ABOUT, WISHLIST, SHOP MODALS -->
+  <div class="modal glass" id="aboutModal">
+    <div class="modal-header"><h2>About Vault</h2><button class="icon-btn" onclick="closeAllModals()">✕</button></div>
+    <p style="font-size: 0.9rem; line-height: 1.6;">Vault is your premier destination for curated, high-end technology. We bring you the latest gadgets with a seamless shopping experience.</p>
+  </div>
+  
+  <div class="modal glass" id="wishlistModal">
+    <div class="modal-header"><h2>Your Wishlist</h2><button class="icon-btn" onclick="closeAllModals()">✕</button></div>
+    <div id="wishlistItemsList">
+      <p style="color: var(--text-muted); text-align: center; padding: 2rem 0;">Your wishlist is empty.</p>
+    </div>
+  </div>
+  
+  <div class="modal glass" id="shopModal">
+    <div class="modal-header"><h2>Shop All Products</h2><button class="icon-btn" onclick="closeAllModals()">✕</button></div>
+    <div class="shop-list" id="shopList"></div>
+  </div>
+
+  <!-- FAB & FEEDBACK -->
+  <button class="fab" onclick="openModal('feedbackModal')">
+    <svg viewBox="0 0 24 24" width="22" height="22" stroke="#fff" stroke-width="2" fill="none"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+  </button>
+  <div class="modal glass" id="feedbackModal">
+    <div class="modal-header"><h2>User Feedback</h2><button class="icon-btn" onclick="closeAllModals()">✕</button></div>
+    <form onsubmit="event.preventDefault(); closeAllModals(); showSnackbar('Salamat! Natanggap na namin ang feedback mo.');">
+      <input type="text" placeholder="Your Name" required class="modal-input">
+      <textarea placeholder="Tell us what you love or how we can improve..." rows="3" required class="modal-input"></textarea>
+      <button type="submit" class="btn-solid" style="width: 100%;">Submit Feedback</button>
+    </form>
+  </div>
+
+  <!-- CHATBOT -->
+  <button class="chat-fab" onclick="toggleChat()">
+    <svg viewBox="0 0 24 24" width="22" height="22" stroke="#fff" stroke-width="2" fill="none"><path d="M12 2a10 10 0 0 1 10 10c0 5.523-4.477 10-10 10a9.96 9.96 0 0 1-4.587-1.11L2 22l1.11-5.413A9.96 9.96 0 0 1 2 12c0-5.523 4.477-10 10-10z"/><path d="M8 12h.01M12 12h.01M16 12h.01"/></svg>
+  </button>
+  
+  <div class="chat-window glass" id="chatWindow">
+    <div class="chat-header">
+      <div class="chat-header-info"><div class="chat-avatar">🤖</div><div><h4>Vault Assistant</h4><p>Online</p></div></div>
+      <button class="icon-btn" onclick="toggleChat()">✕</button>
+    </div>
+    <div class="chat-body" id="chatBody"><div class="chat-msg bot">Hello! How can I help you today?</div></div>
+    <div class="chat-footer">
+      <input type="text" id="chatInput" placeholder="Type..." onkeypress="handleChatEnter(event)">
+      <button class="btn-solid" onclick="sendChatMessage()" style="width: auto; padding: 0 0.8rem; font-size: 0.9rem;">➤</button>
+    </div>
+  </div>
+
+  <div class="snackbar" id="snackbar"><span id="snackbarMsg">Action completed.</span><button onclick="closeSnackbar()">Dismiss</button></div>
+  <div class="toast" id="toast">Added to cart!</div>
+
+  <script src="script.js"></script>
+</body>
+</html>
